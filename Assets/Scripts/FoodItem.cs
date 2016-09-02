@@ -7,6 +7,7 @@ public class FoodItem
     eFoodType _type;    // 类型
     int _count;         // 数量
     int _cdTime;        // 冷却时间(s)
+    int _diffculty;     // 难度系数
 
     public int Count
     {
@@ -39,11 +40,12 @@ public class FoodItem
         }
     }
 
-    public FoodItem(eFoodType eType, int num, int cd)
+    public FoodItem(eFoodType eType, int num, int cd, int d)
     {
         _type = eType;
         _count = num;
         _cdTime = cd;
+        _diffculty = d;
     }
 
     public string GetSpritePath()

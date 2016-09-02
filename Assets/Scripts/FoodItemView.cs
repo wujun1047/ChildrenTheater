@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class FoodItemButton : MonoBehaviour
+public class FoodItemView : MonoBehaviour
 {   
     FoodItem _item;
     Button _button;
@@ -11,11 +11,16 @@ public class FoodItemButton : MonoBehaviour
     Image _maskImg;
     Text _text;
 
-    int _originCount;
+    public FoodItem ItemData
+    {
+        get
+        {
+            return _item;
+        }
+    }
 
-	// Use this for initialization
-	void Start () {
-        _originCount = 0;
+    // Use this for initialization
+    void Start () {
         _button = GetComponent<Button>();
         _image = GetComponent<Image>();
         _maskImg = gameObject.GetComponentByPath<Image>("Mask");
@@ -34,7 +39,7 @@ public class FoodItemButton : MonoBehaviour
         gameObject.GetOrAddComponent<Button>().onClick.RemoveAllListeners();
     }
 
-    public void SetItemData(eFoodType type, int num, int cd)
+    public void SetItemData(eFoodType type, int num, int cd, int d)
     {
         if (_item != null)
         {
@@ -42,7 +47,7 @@ public class FoodItemButton : MonoBehaviour
             _item = null;
         }
 
-        _item = new FoodItem(type, num, cd);
+        _item = new FoodItem(type, num, cd, d);
         string path = _item.GetSpritePath();
         Sprite s = Resources.Load<Sprite>(path);
         if (s != null)
@@ -57,7 +62,6 @@ public class FoodItemButton : MonoBehaviour
         _item.CountChangeEvent += OnCountChangeEvent;
 
         _maskImg.fillAmount = 0f;
-        _originCount = _item.Count;
     }
 
     public void OnCountChangeEvent()
@@ -68,27 +72,28 @@ public class FoodItemButton : MonoBehaviour
         _text.text = _item.Count.ToString();
 
         if (_item.Count <= 0)
-            StartCooldown();
+            _StartCooldown();
     }
 
-    public void StartCooldown()
+    void _StartCooldown()
     {
         if (_item == null || _maskImg == null)
             return;
 
         _button.enabled = false;
         _maskImg.fillAmount = 1f;
-        _maskImg.DOFillAmount(0, _item.CdTime).OnComplete(Reset);
+        _maskImg.DOFillAmount(0, _item.CdTime).OnComplete(_OnCooldownComplete);
     }
 
-    public void Reset()
+    void _OnCooldownComplete()
     {
         if (_item == null)
             return;
 
-        _button.enabled = true;
-        _item.Count = _originCount;
-        _maskImg.fillAmount = 0f;
+        EventArgs_FoodType args = new EventArgs_FoodType();
+        args.eventType = Events.GameEvent.FoodItemCooldownComplete;
+        args.eFoodType = _item.Type;
+        EventDispatcher.Instance.TriggerEvent(args);
     }
 
     void OnClick()
@@ -96,33 +101,33 @@ public class FoodItemButton : MonoBehaviour
         if (_item == null)
             return;
 
-        EventArgs_SelectedFoodChanged args = new EventArgs_SelectedFoodChanged();
+        EventArgs_FoodType args = new EventArgs_FoodType();
         args.eventType = Events.GameEvent.SelectedFoodChanged;
         args.eFoodType = _item.Type;
         EventDispatcher.Instance.TriggerEvent(args);
     }
 
-    void OnGUI()
-    {
-        int idx = 0;
-        if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "Set Banana"))
-        {
-            SetItemData(eFoodType.banana, 10, 2);
-        }
+    //void OnGUI()
+    //{
+    //    int idx = 0;
+    //    if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "Set Banana"))
+    //    {
+    //        SetItemData(eFoodType.banana, 10, 2);
+    //    }
 
-        if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "Set Apple"))
-        {
-            SetItemData(eFoodType.apple, 8, 3);
-        }
+    //    if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "Set Apple"))
+    //    {
+    //        SetItemData(eFoodType.apple, 8, 3);
+    //    }
 
-        if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "Reduce Count"))
-        {
-            _item.Count--;
-        }
+    //    if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "Reduce Count"))
+    //    {
+    //        _item.Count--;
+    //    }
 
-        if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "DoFillAmout"))
-        {
-            StartCooldown();
-        }
-    }
+    //    if (GUI.Button(new Rect(10, 20 + 100 * idx++, 150, 80), "DoFillAmout"))
+    //    {
+    //        StartCooldown();
+    //    }
+    //}
 }

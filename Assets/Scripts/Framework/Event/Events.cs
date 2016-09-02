@@ -14,6 +14,8 @@ public static class Events
     public static class GameEvent
     {
         public readonly static string SelectedFoodChanged = "SelectedFoodChanged";
+        public readonly static string FoodItemCooldownComplete = "FoodItemCooldownComplete";
+        public readonly static string ThrowFood = "ThrowFood";
     }
 }
 
@@ -22,7 +24,7 @@ public class EventArgs
     public string eventType;
 }
 
-public class EventArgs_SelectedFoodChanged : EventArgs
+public class EventArgs_FoodType : EventArgs
 {
     public eFoodType eFoodType;
 }

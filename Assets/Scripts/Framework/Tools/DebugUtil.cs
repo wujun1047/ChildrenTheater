@@ -37,7 +37,7 @@ public enum E_LogLevel
 public class DebugUtil
 {
 	public static E_LogLevel CurrentLogLevels = E_LogLevel.DEBUG | E_LogLevel.INFO | E_LogLevel.WARNING | E_LogLevel.ERROR | E_LogLevel.CRITICAL | E_LogLevel.EXCEPTION;
-	private const Boolean IsShowStack = true;
+	private const Boolean IsShowStack = false;
 	private static LogWriter _logWriter;
 
 	static DebugUtil()
@@ -237,9 +237,10 @@ public class LogWriter
 #if UNITY_IPHONE
 		_logWriter(msg, level, writeEditorLog, writeFile);
 #else
-        _logWriter.BeginInvoke(msg, level, writeEditorLog, writeFile, null, null);
-		#endif
-	}
+        //_logWriter.BeginInvoke(msg, level, writeEditorLog, writeFile, null, null);
+        _logWriter(msg, level, writeEditorLog, writeFile);
+#endif
+    }
 
 	private void Write(string msg, E_LogLevel level, bool writeEditorLog, bool writeFile)
 	{
