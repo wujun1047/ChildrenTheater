@@ -26,7 +26,7 @@ public class ThrowButton : MonoBehaviour {
 
     void _OnButtonClick()
     {
-        if (!GameManager.GetInst.StartThrowFood())
+        if (!GameManager.Instance.StartThrowFood())
             return;
 
         if (_maskImg)

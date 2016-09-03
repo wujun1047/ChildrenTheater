@@ -4,7 +4,6 @@ using System;
 
 public class FoodModelController : MonoBehaviour
 {
-    Transform _target;// TODO:
     Projectile _projectile;
     eFoodType _eSelFoodType; // 当前选中的食物类型
     GameObject _foodModel;
@@ -67,15 +66,19 @@ public class FoodModelController : MonoBehaviour
 
     void _OnThrowFoodBegin(EventArgs args)
     {
+        Vector3 pos = new Vector3();
+        if (!GameManager.Instance.GetAnimalPosition(ref pos))
+            return;
+
         if (_projectile != null)
         {
             EventArgs_Float floatArgs = args as EventArgs_Float;
-            if (args != null && _target != null)
+            if (args != null)
             {
                 ThrowParam param = _projectile.gameObject.GetOrAddComponent<ThrowParam>();
                 param.power = floatArgs.fValue;
                 param.eType = _eSelFoodType;
-                _projectile.StartProjectile(_target.position, _OnProjectileComplete);
+                _projectile.StartProjectile(pos, _OnProjectileComplete);
             }
         }
     }

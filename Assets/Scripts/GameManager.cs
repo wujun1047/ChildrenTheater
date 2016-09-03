@@ -7,11 +7,12 @@ public class GameManager : MonoBehaviour
 
     bool _bStartGame;
     int _score;     // 分数
-    Animal _animal; // 当前动物
+    AnimalModel _animal; // 当前动物
     BagManager _bagMgr;
+    PowerBar _powerBar;
 
     private static GameManager _inst = null;
-    public static GameManager GetInst
+    public static GameManager Instance
     {
         get
         {
@@ -49,9 +50,12 @@ public class GameManager : MonoBehaviour
     {
         GameObject go = GameObject.Find("Bag");
         if (go != null)
-        {
             _bagMgr = go.GetComponent<BagManager>();
-        }
+
+        go = GameObject.Find("PowerBar");
+        if (go != null)
+            _powerBar = go.GetComponent<PowerBar>();
+
         EventDispatcher.Instance.AddListener(Events.GameEvent.ThrowFoodFinish, _OnThrowFoodFinish);
     }
 
@@ -76,7 +80,16 @@ public class GameManager : MonoBehaviour
         bool bHit = true;// TODO: 先判断是否命中
         if (bHit)
         {
-            // 命中的话加分
+            // 命中的话
+            // 判断食物是否符合动物口味
+            if (_animal.IsFoodSuitable(finishArgs.eType))
+            {
+                // 加分
+            }
+            else
+            {
+                // 提示口味不符
+            }
         }
         else
         {
@@ -115,5 +128,24 @@ public class GameManager : MonoBehaviour
             // TODO: 提示选择的食物已经没有了
         }
         return bThrow;
+    }
+
+    public float GetDifficulity()
+    {
+        float d = 1f;
+        if (_animal == null)
+            return d;
+
+        d = _animal.difficulty + FoodItem.GetDifficulty(_bagMgr.SelFoodItem.Type);
+        return d;
+    }
+
+    public bool GetAnimalPosition(ref Vector3 pos)
+    {
+        if (_animal == null)
+            return false;
+
+        pos = _animal.transform.position;
+        return true;
     }
 }

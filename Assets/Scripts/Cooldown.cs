@@ -47,6 +47,6 @@ public class Cooldown : MonoBehaviour {
 
     void _OnCooldownCompelete()
     {
-        GameManager.GetInst.GameOver();
+        GameManager.Instance.GameOver();
     }
 }
