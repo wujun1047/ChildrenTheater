@@ -43,7 +43,7 @@ public class FoodItemView : MonoBehaviour
         gameObject.GetOrAddComponent<Button>().onClick.RemoveAllListeners();
     }
 
-    public void SetItemData(eFoodType type, int num, int cd, int d)
+    public void SetItemData(eFoodType type, int num)
     {
         if (_item != null)
         {
@@ -51,7 +51,7 @@ public class FoodItemView : MonoBehaviour
             _item = null;
         }
 
-        _item = new FoodItem(type, num, cd, d);
+        _item = new FoodItem(type, num);
         string path = FoodItem.GetSpritePath(_item.Type);
         Sprite s = Resources.Load<Sprite>(path);
         if (s != null)
@@ -86,29 +86,24 @@ public class FoodItemView : MonoBehaviour
 
         _button.enabled = false;
         _maskImg.fillAmount = 1f;
-        _maskImg.DOFillAmount(0, _item.CdTime).OnComplete(_OnCooldownComplete);
+        _maskImg.DOFillAmount(0, FoodItem.GetCDTime(_item.Type)).
+            SetEase(Ease.Linear).
+            OnComplete(_OnCooldownComplete);
     }
 
     void _OnCooldownComplete()
     {
         if (_item == null)
             return;
-
-        _button.enabled = true;
-        EventArgs_FoodType args = new EventArgs_FoodType();
-        args.eventType = Events.GameEvent.FoodItemCooldownComplete;
-        args.eFoodType = _item.Type;
-        EventDispatcher.Instance.TriggerEvent(args);
+        
+        EventDispatcher.Instance.TriggerEvent(new EventArgs_FoodType(Events.GameEvent.FoodItemCooldownComplete, _item.Type));
     }
 
     void OnClick()
     {
         if (_item == null)
             return;
-
-        EventArgs_FoodType args = new EventArgs_FoodType();
-        args.eventType = Events.GameEvent.SelectedFoodChanged;
-        args.eFoodType = _item.Type;
-        EventDispatcher.Instance.TriggerEvent(args);
+        
+        EventDispatcher.Instance.TriggerEvent(new EventArgs_FoodType(Events.GameEvent.SelectedFoodChanged, _item.Type));
     }
 }

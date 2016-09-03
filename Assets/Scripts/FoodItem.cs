@@ -6,8 +6,6 @@ public class FoodItem
 
     eFoodType _type;    // 类型
     int _count;         // 数量
-    int _cdTime;        // 冷却时间(s)
-    int _diffculty;     // 难度系数
 
     public int Count
     {
@@ -32,20 +30,10 @@ public class FoodItem
         }
     }
 
-    public int CdTime
-    {
-        get
-        {
-            return _cdTime;
-        }
-    }
-
-    public FoodItem(eFoodType eType, int num, int cd, int d)
+    public FoodItem(eFoodType eType, int num)
     {
         _type = eType;
         _count = num;
-        _cdTime = cd;
-        _diffculty = d;
     }
 
     public static string GetSpritePath(eFoodType eType)
@@ -58,5 +46,65 @@ public class FoodItem
         //TODO:
         //return "Prefabs/" + eType.ToString() + "Prefab";
         return "Prefabs/FoodsModel/ball";
+    }
+    
+    // 冷却时间(s)
+    public static int GetCDTime(eFoodType eType)
+    {
+        int cd = 30;
+        switch (eType)
+        {
+            case eFoodType.banana:
+                cd = 30;
+                break;
+            case eFoodType.bone:
+                cd = 30;
+                break;
+            case eFoodType.fish:
+                cd = 30;
+                break;
+            case eFoodType.meat:
+                cd = 30;
+                break;
+            case eFoodType.radish:
+                cd = 30;
+                break;
+            case eFoodType.vegetable:
+                cd = 30;
+                break;
+            default:
+                break;
+        }
+        return cd;
+    }
+    
+    // 难度系数
+    public static int GetDifficulty(eFoodType eType)
+    {
+        int d = 3;
+        switch (eType)
+        {
+            case eFoodType.banana:
+                d = 3;
+                break;
+            case eFoodType.bone:
+                d = 1;
+                break;
+            case eFoodType.fish:
+                d = 2;
+                break;
+            case eFoodType.meat:
+                d = 5;
+                break;
+            case eFoodType.radish:
+                d = 2;
+                break;
+            case eFoodType.vegetable:
+                d = 4;
+                break;
+            default:
+                break;
+        }
+        return d;
     }
 };

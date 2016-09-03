@@ -3,16 +3,16 @@ using System;
 using System.Collections;
 using DG.Tweening;
 
-
+// 抛物线轨迹
 public class Projectile : MonoBehaviour
 {
     public float speed = 10;
     public float bounceFactor = 0.5f;
     float threshold = 0.1f;
-    bool bounce = false;
+    //bool bounce = false;
 
     Vector3 targetPos;
-    Vector3 direction;
+    //Vector3 direction;
     private float distanceToTarget;
     private bool move = false;
 
@@ -27,7 +27,7 @@ public class Projectile : MonoBehaviour
         }
     }
 
-    event Action PorjectileFinishEvent;
+    event Action<GameObject> PorjectileFinishEvent;
 
     void Start()
     {
@@ -65,7 +65,7 @@ public class Projectile : MonoBehaviour
                     move = false;
                     if (PorjectileFinishEvent != null)
                     {
-                        PorjectileFinishEvent();
+                        PorjectileFinishEvent(gameObject);
                     }
                 }
             }
@@ -84,12 +84,12 @@ public class Projectile : MonoBehaviour
     /// start play
     /// </summary>
     /// <param name="targetPosiotn"> target position in worldspace </param>
-    public void StartProjectile(Vector3 targetPosiotn, Action OnFinish)
+    public void StartProjectile(Vector3 targetPosiotn, Action<GameObject> OnFinish)
     {
-        bounce = false;
+        //bounce = false;
 
         targetPos = targetPosiotn;
-        direction = Vector3.Normalize(targetPos - transform.position);
+        //direction = Vector3.Normalize(targetPos - transform.position);
         PorjectileFinishEvent = OnFinish;
         distanceToTarget = Vector3.Distance(this.transform.position, targetPos);
         move = true;

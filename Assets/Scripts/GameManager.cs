@@ -7,18 +7,24 @@ public class GameManager : MonoBehaviour
 
     bool _bStartGame;
     int _score;     // 分数
-    
+    Animal _animal; // 当前动物
+    BagManager _bagMgr;
+
+    private static GameManager _inst = null;
     public static GameManager GetInst
     {
         get
         {
-            GameManager mgr = null;
-            GameObject go = GameObject.Find("GameManager");
-            if (go != null)
+            if (_inst == null)
             {
-                mgr = go.GetComponent<GameManager>();
+                GameObject go = GameObject.Find("GameManager");
+                if (go != null)
+                {
+                    _inst = go.GetComponent<GameManager>();
+                }
+                return _inst;
             }
-            return mgr;
+            return _inst;
         }
     }
 
@@ -29,11 +35,7 @@ public class GameManager : MonoBehaviour
         set
         {
             _score = value;
-
-            EventArgs_Int args = new EventArgs_Int();
-            args.eventType = Events.GameEvent.UpdateScore;
-            args.nValue = _score;
-            EventDispatcher.Instance.TriggerEvent(args);
+            EventDispatcher.Instance.TriggerEvent(new EventArgs_Int(Events.GameEvent.UpdateScore, _score));
         }
     }
 
@@ -45,6 +47,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        GameObject go = GameObject.Find("Bag");
+        if (go != null)
+        {
+            _bagMgr = go.GetComponent<BagManager>();
+        }
+        EventDispatcher.Instance.AddListener(Events.GameEvent.ThrowFoodFinish, _OnThrowFoodFinish);
     }
 
     void Update()
@@ -53,16 +61,33 @@ public class GameManager : MonoBehaviour
 
     void OnDestroy()
     {
+        EventDispatcher.Instance.RemoveListener(Events.GameEvent.ThrowFoodFinish, _OnThrowFoodFinish);
         GameOver();
+    }
+
+    void _OnThrowFoodFinish(EventArgs args)
+    {
+        // 没有动物出现就不处理
+        if (_animal == null)
+            return;
+
+        EventArgs_ThrowFinish finishArgs = args as EventArgs_ThrowFinish;
+
+        bool bHit = true;// TODO: 先判断是否命中
+        if (bHit)
+        {
+            // 命中的话加分
+        }
+        else
+        {
+            // 没有命中的话提示
+        }
     }
 
     public void StartGame()
     {
         _bStartGame = true;
-        EventArgs_Int args = new EventArgs_Int();
-        args.eventType = Events.GameEvent.GameStart;
-        args.nValue = GameTotalTime;
-        EventDispatcher.Instance.TriggerEvent(args);
+        EventDispatcher.Instance.TriggerEvent(new EventArgs_Int(Events.GameEvent.GameStart, GameTotalTime));
     }
 
     public void GameOver()
@@ -71,11 +96,24 @@ public class GameManager : MonoBehaviour
         {
             _bStartGame = false;
             HistoryScoresManager.Instance.AddHistoryScore(new HistoryScore(DateTime.Now.Ticks, _score));
-
-            EventArgs_Int args = new EventArgs_Int();
-            args.eventType = Events.GameEvent.GameOver;
-            args.nValue = _score;
-            EventDispatcher.Instance.TriggerEvent(args);
+            EventDispatcher.Instance.TriggerEvent(new EventArgs_Int(Events.GameEvent.GameOver, _score));
+            // TODO: 弹出结算界面
         }
+    }
+
+    public bool StartThrowFood()
+    {
+        bool bThrow = true;
+        if (_bagMgr.SelFoodItem.Count > 0)
+        {
+            float power = 5f;//TODO: 获取蓄力条的力度
+            EventDispatcher.Instance.TriggerEvent(new EventArgs_Float(Events.GameEvent.ThrowFoodBegin, power));
+        }
+        else
+        {
+            bThrow = false;
+            // TODO: 提示选择的食物已经没有了
+        }
+        return bThrow;
     }
 }

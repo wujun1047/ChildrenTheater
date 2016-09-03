@@ -36,12 +36,42 @@ public class EventArgs
 public class EventArgs_Int : EventArgs
 {
     public int nValue;
+    public EventArgs_Int(string type, int n) : base(type)
+    {
+        nValue = n;
+    }
 }
 
 public class EventArgs_FoodType : EventArgs
 {
     public eFoodType eFoodType;
+    public EventArgs_FoodType(string type, eFoodType eType) : base(type)
+    {
+        eFoodType = eType;
+    }
 }
+
+public class EventArgs_Float : EventArgs
+{
+    public float fValue;
+    public EventArgs_Float(string type, float f) : base(type)
+    {
+        fValue = f;
+    }
+}
+
+public class EventArgs_ThrowFinish : EventArgs
+{
+    public eFoodType eType;
+    public float fPower;
+    public EventArgs_ThrowFinish(eFoodType t, float f)
+    {
+        eventType = Events.GameEvent.ThrowFoodFinish;
+        eType = t;
+        fPower = f;
+    }
+}
+
 
 public class NetworkEventArgs : EventArgs
 {

@@ -17,17 +17,12 @@ public class BagManager : MonoBehaviour
     Dictionary<eFoodType, int> _initDict; // 各种食物的初始值
     List<FoodItemView> _btnList; // 食物格子列表
     FoodItemView _selFoodBtn; // 当前选中的食物格子
-    public static BagManager GetInst
+
+    public FoodItem SelFoodItem
     {
         get
         {
-            BagManager mgr = null;
-            GameObject go = GameObject.Find("Bag");
-            if (go != null)
-            {
-                mgr = go.GetComponent<BagManager>();
-            }
-            return mgr;
+            return _selFoodBtn.ItemData;
         }
     }
 
@@ -43,7 +38,6 @@ public class BagManager : MonoBehaviour
 
         EventDispatcher.Instance.AddListener(Events.GameEvent.SelectedFoodChanged, _OnSelectedFoodChanged);
         EventDispatcher.Instance.AddListener(Events.GameEvent.ThrowFoodBegin, _OnThrowFoodBegin);
-        EventDispatcher.Instance.AddListener(Events.GameEvent.ThrowFoodBegin, _OnThrowFoodBegin);
         EventDispatcher.Instance.AddListener(Events.GameEvent.FoodItemCooldownComplete, _OnFoodItemCooldownComplete);
         _InitFoodBtnList();
 	}
@@ -51,7 +45,6 @@ public class BagManager : MonoBehaviour
     void OnDestroy()
     {
         EventDispatcher.Instance.RemoveListener(Events.GameEvent.SelectedFoodChanged, _OnSelectedFoodChanged);
-        EventDispatcher.Instance.RemoveListener(Events.GameEvent.ThrowFoodBegin, _OnThrowFoodBegin);
         EventDispatcher.Instance.RemoveListener(Events.GameEvent.ThrowFoodBegin, _OnThrowFoodBegin);
         EventDispatcher.Instance.RemoveListener(Events.GameEvent.FoodItemCooldownComplete, _OnFoodItemCooldownComplete);
     }
@@ -66,18 +59,15 @@ public class BagManager : MonoBehaviour
         FoodItemView[] btns = GetComponentsInChildren<FoodItemView>();
         _btnList = new List<FoodItemView>(btns);
         int i = 0;
-        _btnList[i++].SetItemData(eFoodType.radish, radishDefault, 30, 3);
-        _btnList[i++].SetItemData(eFoodType.bone, boneDefault, 30, 1);
-        _btnList[i++].SetItemData(eFoodType.meat, meatDefault, 30, 5);
-        _btnList[i++].SetItemData(eFoodType.fish, fishDefault, 30, 2);
-        _btnList[i++].SetItemData(eFoodType.banana, bananaDefault, 30, 3);
-        _btnList[i++].SetItemData(eFoodType.vegetable, vegetableDefault, 30, 3);
+        _btnList[i++].SetItemData(eFoodType.radish, radishDefault);
+        _btnList[i++].SetItemData(eFoodType.bone, boneDefault);
+        _btnList[i++].SetItemData(eFoodType.meat, meatDefault);
+        _btnList[i++].SetItemData(eFoodType.fish, fishDefault);
+        _btnList[i++].SetItemData(eFoodType.banana, bananaDefault);
+        _btnList[i++].SetItemData(eFoodType.vegetable, vegetableDefault);
 
         // 将待扔的食物初始化为第一个食物
-        EventArgs_FoodType args = new EventArgs_FoodType();
-        args.eventType = Events.GameEvent.SelectedFoodChanged;
-        args.eFoodType = _btnList[0].ItemData.Type;
-        EventDispatcher.Instance.TriggerEvent(args);
+        EventDispatcher.Instance.TriggerEvent(new EventArgs_FoodType(Events.GameEvent.SelectedFoodChanged, _btnList[0].ItemData.Type));
     }
 
     FoodItemView _GetFootBtn(eFoodType eType)
