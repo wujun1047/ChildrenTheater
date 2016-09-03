@@ -13,15 +13,29 @@ public static class Events
 
     public static class GameEvent
     {
+        public readonly static string GameStart = "GameStart";
+        public readonly static string GameOver = "GameOver";
+        public readonly static string UpdateScore = "UpdateScore";
         public readonly static string SelectedFoodChanged = "SelectedFoodChanged";
         public readonly static string FoodItemCooldownComplete = "FoodItemCooldownComplete";
-        public readonly static string ThrowFood = "ThrowFood";
+        public readonly static string ThrowFoodBegin = "ThrowFoodBegin";
+        public readonly static string ThrowFoodFinish = "ThrowFoodFinish";
     }
 }
 
 public class EventArgs
 {
     public string eventType;
+    public EventArgs(string type)
+    {
+        eventType = type;
+    }
+    public EventArgs() { }
+}
+
+public class EventArgs_Int : EventArgs
+{
+    public int nValue;
 }
 
 public class EventArgs_FoodType : EventArgs

@@ -48,13 +48,15 @@ public class FoodItem
         _diffculty = d;
     }
 
-    public string GetSpritePath()
+    public static string GetSpritePath(eFoodType eType)
     {
-        return "Texture/" + _type.ToString();
+        return "Texture/Foods/" + eType.ToString();
     }
 
-    public string GetPrefabName()
+    public static string GetPrefabPath(eFoodType eType)
     {
-        return "Prefabs/" + _type.ToString() + "Prefab";
+        //TODO:
+        //return "Prefabs/" + eType.ToString() + "Prefab";
+        return "Prefabs/FoodsModel/ball";
     }
 };

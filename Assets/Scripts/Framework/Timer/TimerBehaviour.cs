@@ -99,7 +99,6 @@ public class TimerBehaviour : MonoBehaviour
     {
         if (IsTimerRunning())
         {
-
             StopTimer();
         }
     }
