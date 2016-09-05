@@ -12,8 +12,13 @@
 
 public enum eAnimalType
 {
-    rabbit,
+    tigger,
     bear,
+    elephant,
+    fox,
+    panda,
+    eagle,
+    pig,
 
     eAnimalType_Max
 };

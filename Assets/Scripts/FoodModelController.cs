@@ -8,8 +8,6 @@ public class FoodModelController : MonoBehaviour
     eFoodType _eSelFoodType; // 当前选中的食物类型
     GameObject _foodModel;
 
-    //TODO: 加上对识别到动物模型的响应
-
     // Use this for initialization
     void Start () {
         EventDispatcher.Instance.AddListener(Events.GameEvent.SelectedFoodChanged, _OnSelectedFoodChanged);

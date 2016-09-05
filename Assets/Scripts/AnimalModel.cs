@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class AnimalModel : MonoBehaviour
 {
+    public Transform tipRoot; // 提示信息飘出来的位置
     public int difficulty;  // 难度
     public eAnimalType animalType; // 类型
     public eFoodType[] suitableFoods; // 匹配的食物
@@ -28,5 +29,15 @@ public class AnimalModel : MonoBehaviour
     public bool IsFoodSuitable(eFoodType eFood)
     {
         return _foodsList.Contains(eFood);
+    }
+
+    public void OnAnimalAppear()
+    {
+        GameManager.Instance.SetAnimalModel(this);
+    }
+
+    public void OnAnimalDisppear()
+    {
+        GameManager.Instance.SetAnimalModel(null);
     }
 }
