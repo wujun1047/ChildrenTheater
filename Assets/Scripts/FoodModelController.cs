@@ -47,8 +47,10 @@ public class FoodModelController : MonoBehaviour
                         _foodModel = null;
                     }
                 }
-                _foodModel = Instantiate(prefab); 
+                _foodModel = Instantiate(prefab);
+                Vector3 originPos = _foodModel.transform.localPosition;
                 _foodModel.transform.parent = transform;
+                _foodModel.transform.localPosition = originPos;
                 _projectile = _foodModel.GetComponent<Projectile>();
             }
             else
